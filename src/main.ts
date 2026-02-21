@@ -1,6 +1,7 @@
 import express from "express";
 import { pool } from "./infrastructure/database";
 import vendorRoutes from "./interfaces/routes/vendor.route";
+import productRoutes from "./interfaces/routes/products.route"
 import { errorMiddleware } from "./interfaces/middlewares/error.middleware";
 // ... routes above
 
@@ -16,6 +17,8 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });
 app.use("/vendors", vendorRoutes);
+
+app.use("/products",productRoutes);
 
 app.use(errorMiddleware);
 
