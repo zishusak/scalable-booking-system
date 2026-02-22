@@ -42,3 +42,13 @@ model Booking {
   @@index([productId])
   @@map("bookings")
 }
+
+model IdempotencyKey {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  requestHash String
+  response    Json
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("idempotency_keys")
+}
