@@ -1,4 +1,5 @@
 import express from "express";
+import "dotenv/config";
 import { pool } from "./infrastructure/database";
 import vendorRoutes from "./interfaces/routes/vendor.route";
 import productRoutes from "./interfaces/routes/products.route"
