@@ -28,4 +28,39 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.get("/", async (req, res, next) => {
+  try {
+    const page = Math.max(1, Number(req.query.page ?? 1));
+    const limit = Math.min(50, Math.max(1, Number(req.query.limit ?? 10)));
+    const skip = (page - 1) * limit;
+
+    const vendorIdRaw = req.query.vendorId;
+    const vendorId = vendorIdRaw ? Number(vendorIdRaw) : undefined;
+    if (vendorIdRaw && Number.isNaN(vendorId)) throw new AppError(400, "vendorId must be a number");
+
+    const where = vendorId ? { vendorId } : {};
+
+    const [items, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { id: "desc" },
+        include: { vendor: true }, // ✅ relation
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    res.json({
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      items,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default router;

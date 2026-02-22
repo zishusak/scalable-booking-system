@@ -27,4 +27,16 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+
+router.get("/", async (req, res, next) => {
+  try {
+    const vendors = await prisma.vendor.findMany({
+      orderBy: { id: "desc" },
+    });
+    res.json(vendors);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default router;
