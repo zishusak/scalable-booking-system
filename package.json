@@ -4,7 +4,8 @@
   "description": "Production-grade backend architecture project",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/main.ts"
+    "dev": "ts-node-dev --respawn src/main.ts",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,13 +19,23 @@
   },
   "homepage": "https://github.com/zishusak/scalable-booking-system#readme",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.4.1",
+    "@prisma/client": "^7.4.1",
     "express": "^5.2.1",
-    "pg": "^8.18.0"
+    "pg": "^8.18.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.3.0",
     "@types/pg": "^8.16.0",
+    "@types/supertest": "^6.0.3",
+    "dotenv": "^17.3.1",
+    "jest": "^30.2.0",
+    "prisma": "^7.4.1",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
