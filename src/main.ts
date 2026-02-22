@@ -3,6 +3,7 @@ import "dotenv/config";
 import { pool } from "./infrastructure/database";
 import vendorRoutes from "./interfaces/routes/vendor.route";
 import productRoutes from "./interfaces/routes/products.route"
+import bookingRoutes from "./interfaces/routes/booking.route";
 import { errorMiddleware } from "./interfaces/middlewares/error.middleware";
 // ... routes above
 
@@ -20,6 +21,8 @@ app.get("/health", (req, res) => {
 app.use("/vendors", vendorRoutes);
 
 app.use("/products",productRoutes);
+
+app.use("/bookings", bookingRoutes);
 
 app.use(errorMiddleware);
 
