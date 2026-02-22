@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { pool } from "../../infrastructure/database";
 import { AppError } from "../../shared/errors";
+import { prisma } from "../../infrastructure/prisma";
 
 const router = Router();
 
@@ -16,12 +17,11 @@ router.post("/", async (req, res, next) => {
 
     const { name } = parsed.data;
 
-    const result = await pool.query(
-      "INSERT INTO vendors (name) VALUES ($1) RETURNING *",
-      [name]
-    );
+    const vendor = await prisma.vendor.create({
+      data: { name },
+    });
 
-    res.json(result.rows[0]);
+    res.json(vendor);
   } catch (e) {
     next(e);
   }

@@ -1,29 +1,28 @@
 import { Router } from "express";
+import { prisma } from "../../infrastructure/prisma";
 import { z } from "zod";
-import { pool } from "../../infrastructure/database";
 import { AppError } from "../../shared/errors";
 
 const router = Router();
 
-const createVendorSchema = z.object({
-  name: z.string().min(2, "name must be at least 2 characters"),
-  price:z.number("price must be number and filled"),
-  vendor_id:z.number("vendor id must be assigned")
+const schema = z.object({
+  vendorId: z.number(),
+  name: z.string().min(2),
+  price: z.number().positive(),
 });
 
 router.post("/", async (req, res, next) => {
   try {
-    const parsed = createVendorSchema.safeParse(req.body);
+    const parsed = schema.safeParse(req.body);
     if (!parsed.success) throw new AppError(400, parsed.error.message);
 
-    const { vendor_id, name, price } = parsed.data;
+    const { vendorId, name, price } = parsed.data;
 
-    const result = await pool.query(
-     "INSERT INTO products (vendor_id, name, price) VALUES ($1, $2, $3) RETURNING *",
-     [vendor_id,name,price]
-    );
+    const product = await prisma.product.create({
+      data: { vendorId, name, price },
+    });
 
-    res.json(result.rows[0]);
+    res.json(product);
   } catch (e) {
     next(e);
   }
