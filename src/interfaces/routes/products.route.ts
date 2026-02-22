@@ -63,4 +63,21 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.patch("/:id/stock", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const stock = Number(req.body.stock);
+    if (Number.isNaN(id) || Number.isNaN(stock)) throw new AppError(400, "id and stock must be numbers");
+
+    const updated = await prisma.product.update({
+      where: { id },
+      data: { stock },
+    });
+
+    res.json(updated);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default router;
