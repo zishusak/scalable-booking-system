@@ -35,6 +35,9 @@ router.post("/", async (req, res, next) => {
       if (existing.requestHash !== requestHash) {
         throw new AppError(409, "Idempotency-Key conflict: request payload differs");
       }
+      if (existing && existing.expiresAt < new Date()) {
+         throw new AppError(400, "Idempotency-Key expired");// expired, ignore (optional: delete)
+      }
       return res.status(200).json(existing.response);
     }
 
@@ -64,12 +67,10 @@ router.post("/", async (req, res, next) => {
         });
         });
 
+        const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
         await prisma.idempotencyKey.create({
-            data: {
-              key: idempotencyKey,
-              requestHash,
-              response: booking as any,
-            },
+          data: { key: idempotencyKey, requestHash, response: booking as any, expiresAt },
         });
 
 

@@ -49,6 +49,8 @@ model IdempotencyKey {
   requestHash String
   response    Json
   createdAt   DateTime @default(now()) @map("created_at")
+  expiresAt   DateTime @map("expires_at")
 
+  @@index([expiresAt])
   @@map("idempotency_keys")
 }
